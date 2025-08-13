@@ -24,14 +24,14 @@ import software.amazon.awssdk.protocols.jsoncore.internal.ObjectJsonNode;
 import software.amazon.awssdk.thirdparty.jackson.core.JsonFactory;
 
 /**
- * A node in a JSON document. Either a number, string, boolean, array, object or null. Also can be an embedded object,
- * which is a non-standard type used in JSON extensions, like CBOR.
+ * A node in a JSON document. Either a number, string, boolean, array, object or null. Also can be an embedded object, which is a
+ * non-standard type used in JSON extensions, like CBOR.
  *
  * <p>Created from a JSON document via {@link #parser()} or {@link #parserBuilder()}.
  *
  * <p>The type of node can be determined using "is" methods like {@link #isNumber()} and {@link #isString()}.
- * Once the type is determined, the value of the node can be extracted via the "as" methods, like {@link #asNumber()}
- * and {@link #asString()}.
+ * Once the type is determined, the value of the node can be extracted via the "as" methods, like {@link #asNumber()} and
+ * {@link #asString()}.
  */
 @SdkProtectedApi
 public interface JsonNode {
@@ -39,7 +39,7 @@ public interface JsonNode {
      * Create a {@link JsonNodeParser} for generating a {@link JsonNode} from a JSON document.
      */
     static JsonNodeParser parser() {
-        return JsonNodeParser.create();
+        return JsonNode.parserBuilder().removeErrorLocations(true).build();
     }
 
     /**
@@ -154,8 +154,8 @@ public interface JsonNode {
     Map<String, JsonNode> asObject();
 
     /**
-     * When {@link #isEmbeddedObject()} is true, this returns the embedded object associated with this node. This will throw
-     * an exception if {@link #isEmbeddedObject()} is false.
+     * When {@link #isEmbeddedObject()} is true, this returns the embedded object associated with this node. This will throw an
+     * exception if {@link #isEmbeddedObject()} is false.
      *
      * @see #isEmbeddedObject()
      */
@@ -167,8 +167,8 @@ public interface JsonNode {
     <T> T visit(JsonNodeVisitor<T> visitor);
 
     /**
-     * When {@link #isString()}, {@link #isBoolean()}, or {@link #isNumber()} is true, this will return the value of this node
-     * as a textual string. If this is any other type, this will return null.
+     * When {@link #isString()}, {@link #isBoolean()}, or {@link #isNumber()} is true, this will return the value of this node as
+     * a textual string. If this is any other type, this will return null.
      */
     String text();
 
@@ -177,7 +177,7 @@ public interface JsonNode {
      * this is any other type, this will return {@link Optional#empty()}.
      */
     default Optional<JsonNode> field(String child) {
-        return Optional.empty();
+        return Optional.ofNullable(asObject().get(child));
     }
 
     /**
@@ -185,6 +185,7 @@ public interface JsonNode {
      * this is any other type or the child is out of bounds, this will return {@link Optional#empty()}.
      */
     default Optional<JsonNode> index(int child) {
-        return Optional.empty();
+        List<JsonNode> list = asArray();
+        return child >= 0 && child < list.size() ? Optional.of(list.get(child)) : Optional.empty();
     }
 }
