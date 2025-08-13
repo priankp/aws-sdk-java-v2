@@ -320,6 +320,7 @@ final class DefaultSdkHttpFullRequest implements SdkHttpFullRequest {
 
         @Override
         public DefaultSdkHttpFullRequest.Builder putRawQueryParameter(String paramName, List<String> paramValues) {
+            this.queryParameters.forInternalWrite().remove(paramName);
             this.queryParameters.forInternalWrite().put(paramName, new ArrayList<>(paramValues));
             return this;
         }

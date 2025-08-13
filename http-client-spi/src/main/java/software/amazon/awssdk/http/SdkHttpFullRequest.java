@@ -70,6 +70,7 @@ public interface SdkHttpFullRequest
                        .port(uri.getPort())
                        .encodedPath(SdkHttpUtils.appendUri(uri.getRawPath(), encodedPath()));
             if (uri.getRawQuery() != null) {
+                builder.clearQueryParameters();
                 SdkHttpUtils.uriParams(uri)
                             .forEach(this::putRawQueryParameter);
             }
@@ -150,6 +151,7 @@ public interface SdkHttpFullRequest
          */
         @Override
         default Builder putRawQueryParameter(String paramName, String paramValue) {
+            removeQueryParameter(paramName);
             return appendRawQueryParameter(paramName, paramValue);
         }
 
@@ -229,6 +231,7 @@ public interface SdkHttpFullRequest
          */
         @Override
         default Builder putHeader(String headerName, String headerValue) {
+            removeHeader(headerName);
             return appendHeader(headerName, headerValue);
         }
 
