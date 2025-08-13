@@ -39,8 +39,8 @@ import software.amazon.awssdk.utils.builder.SdkBuilder;
 /**
  * Provides programmatic access to the contents of an AWS configuration profile file.
  *
- * AWS configuration profiles allow you to share multiple sets of AWS security credentials between different tools such as the
- * AWS SDK for Java and the AWS CLI.
+ * AWS configuration profiles allow you to share multiple sets of AWS security credentials between different tools such as the AWS
+ * SDK for Java and the AWS CLI.
  *
  * <p>
  * For more information on setting up AWS configuration profiles, see:
@@ -121,6 +121,7 @@ public final class ProfileFile {
 
     /**
      * Retrieve an unmodifiable collection including all of the profiles in this file.
+     *
      * @return An unmodifiable collection of the profiles in this file, keyed by profile name.
      */
     public Map<String, Profile> profiles() {
@@ -171,29 +172,30 @@ public final class ProfileFile {
     }
 
     /**
-     * Convert the sorted map of profile and section properties into a sorted list of profiles and sections.
-     * Example: sortedProfilesSectionMap
-     * @param sortedProfilesSectionMap : Map of String to Profile/Sessions defined.
-     * <pre>
-     *     {@code
-     *     [profile sso-token]
-     *     sso_session = admin
-     *     [sso-session admin]
-     *     sso_start_url = https://view.awsapps.com/start
-     *  }
-     * </pre> would look like
-     * <pre>
-     *     {@code
-     *          sortedProfilesSectionMap
-     *           profiles --   // Profile Section Title
-     *              sso-token --  // Profile Name
-     *                  sso_session = admin    // Property definition
-     *           sso-session -- // Section title for Sso-sessions
-     *              admin --
-     *                  sso_start_url = https://view.awsapps.com/start
+     * Convert the sorted map of profile and section properties into a sorted list of profiles and sections. Example:
+     * sortedProfilesSectionMap
      *
-     *     }
-     * </pre>
+     * @param sortedProfilesSectionMap : Map of String to Profile/Sessions defined.
+     *                                 <pre>
+     *                                     {@code
+     *                                     [profile sso-token]
+     *                                     sso_session = admin
+     *                                     [sso-session admin]
+     *                                     sso_start_url = https://view.awsapps.com/start
+     *                                  }
+     *                                 </pre> would look like
+     *                                 <pre>
+     *                                     {@code
+     *                                          sortedProfilesSectionMap
+     *                                           profiles --   // Profile Section Title
+     *                                              sso-token --  // Profile Name
+     *                                                  sso_session = admin    // Property definition
+     *                                           sso-session -- // Section title for Sso-sessions
+     *                                              admin --
+     *                                                  sso_start_url = https://view.awsapps.com/start
+     *
+     *                                     }
+     *                                 </pre>
      * @return Map with keys representing Profiles and sections and value as Map with keys as profile/section name and value as
      * property definition.
      */
@@ -230,8 +232,8 @@ public final class ProfileFile {
         CONFIGURATION,
 
         /**
-         * A credentials profile file, typically located at ~/.aws/credentials, that expects all profile name to have no
-         * "profile " prefix. Any profiles with a profile prefix will be ignored.
+         * A credentials profile file, typically located at ~/.aws/credentials, that expects all profile name to have no "profile
+         * " prefix. Any profiles with a profile prefix will be ignored.
          */
         CREDENTIALS
     }
@@ -320,7 +322,7 @@ public final class ProfileFile {
             Validate.isTrue(content != null || contentLocation != null,
                             "content or contentLocation must be set.");
             InputStream stream = content != null ? content :
-                                  FunctionalUtils.invokeSafely(() -> Files.newInputStream(contentLocation));
+                                 FunctionalUtils.invokeSafely(() -> Files.newInputStream(contentLocation));
 
             Validate.paramNotNull(type, "type");
             Validate.paramNotNull(stream, "content");
@@ -371,8 +373,10 @@ public final class ProfileFile {
                     if (current == null) {
                         return new HashMap<>(profile.getValue().properties());
                     } else {
-                        current.putAll(profile.getValue().properties());
-                        return current;
+                        Map<String, String> incoming = profile.getValue().properties();
+                        Map<String, String> merged = new HashMap<>(incoming);
+                        merged.putAll(current);
+                        return merged;
                     }
                 });
             }

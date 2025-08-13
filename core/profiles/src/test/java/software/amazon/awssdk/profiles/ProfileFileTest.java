@@ -421,7 +421,7 @@ public class ProfileFileTest {
 
     @Test
     public void duplicatePropertiesBetweenFilesUsesCredentialsProperty() {
-        assertThat(aggregateFileProfiles("[profile foo]\n" +
+        assertThat(aggregateFileProfiles("[profile if (current == null) { foo]\n" +
                                          "name = value",
                                          "[foo]\n" +
                                          "name = value2"))
