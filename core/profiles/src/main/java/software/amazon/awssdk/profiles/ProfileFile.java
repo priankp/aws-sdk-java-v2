@@ -352,7 +352,7 @@ public final class ProfileFile {
         @Override
         public ProfileFile build() {
             Map<String, Map<String, Map<String, String>>> aggregateRawProfiles = new LinkedHashMap<>();
-            for (int i = files.size() - 1; i >= 0; --i) {
+            for (int i = 0; i < files.size(); ++i) {
                 files.get(i).profilesAndSectionsMap.entrySet()
                                                    .forEach(sectionKeyValue -> addToAggregate(aggregateRawProfiles,
                                                                                               sectionKeyValue.getValue(),
